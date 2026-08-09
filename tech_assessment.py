@@ -685,7 +685,6 @@ EXPIRED = "expired"
 DEFAULT_STALE_DAYS = 7
 BATCH_SIZE = 500
 
-
 class Command(BaseCommand):
     help = (
         "Report rewards still in 'claimed' status more than N days (default 7) after "
