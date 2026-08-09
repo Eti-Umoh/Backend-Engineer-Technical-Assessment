@@ -126,7 +126,6 @@ the real engine.
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 
-
 @transaction.atomic
 def approve_reward(request, reward_id):
     reward = get_object_or_404(Reward.objects.select_for_update(), pk=reward_id)
@@ -250,7 +249,6 @@ class Migration(migrations.Migration):
         ),
     ]
 
-
 # Migration 3 — NOT NULL without a scan under an exclusive lock (Postgres 12+).
 class Migration(migrations.Migration):
     atomic = False
@@ -284,10 +282,8 @@ class Migration(migrations.Migration):
 # You need to send push notifications to all followers of a user when they publish a post. A popular creator has 50,000 followers. Walk through exactly how you would design this Celery task. What goes wrong with a naive implementation and how do you prevent it?
 
 Q4_ANSWER = """
-Q4 — Fan-out to 50,000 followers
-
-The naive version — one task looping followers.all() and calling send_push — could go wrong in
-five ways:
+Q4 — The naive version — one task looping followers.all() and calling send_push — could go wrong in
+several ways such as:
   - It occupies one worker slot for 30–60 minutes. Password resets and payment
     callbacks queue behind it; one popular creator starves the system.
   - It loads 50,000 rows into memory, and each send is a separate HTTPS round trip.
@@ -566,17 +562,14 @@ GENERIC_RESET_RESPONSE = {
 # settings.py:
 #   REST_FRAMEWORK = {'DEFAULT_THROTTLE_RATES': {'password_reset': '5/hour'}}
 
-
 class PasswordResetRequestSerializer(serializers.Serializer):
     email = serializers.EmailField()
 
     def validate_email(self, value):
         return value.strip().lower()
 
-
 class PasswordResetThrottle(ScopedRateThrottle):
     scope = 'password_reset'
-
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -621,7 +614,6 @@ def send_reset_email(user_id):
 
 
 # Section 3 — Write It  [30 pts]
-
 # Q8 — Django management command  [30 pts]
 # Write a Django management command called audit_stale_rewards. It must:
 # 1.  Find all Reward rows where status='claimed' and claimed_at is more than 7 days ago
@@ -629,9 +621,7 @@ def send_reset_email(user_id):
 # 3.  Accept a --fix flag that marks them as 'expired' and sets an expires_at timestamp
 # 4.  Without --fix, it must be a completely safe dry run — nothing changes in the DB
 # 5.  Log each expired reward ID at INFO level using Python's logging module, not print()
-
 # The Reward model has at minimum: id, status (CharField), claimed_at (DateTimeField), expires_at (DateTimeField, nullable), reward_type (CharField).
-
 # 📌 Do not use Django admin or third-party packages. Standard library + Django only. We will read your code for clarity, correctness, and Django conventions — not just whether it runs.
 
 Q8_ANSWER = """
