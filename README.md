@@ -1,0 +1,1 @@
+The assessment is designed to evaluate practical production experience, technical judgement, problem-solving ability, and understanding of Django and backend engineering best practices.
